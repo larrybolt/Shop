@@ -1,6 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.lang.model.element.QualifiedNameable;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -8,40 +11,79 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ScanView extends JFrame {
-	
-	public ScanView(){
+import domain.Observer;
+import domain.ShopFacade;
+import domain.Subject;
+import domain.Verkoop;
+
+public class ScanView extends JFrame implements Observer {
+	private UiController controller;
+
+	// we moeten dit bijhouden, want het wordt ge-update in de update() methode
+	JTextField payField;
+
+	public ScanView(UiController uiController){
+		// OOO setup
+		this.controller = uiController;
+		
+		// Swing setup
 		setTitle("Shop Manager");
-		setSize(300, 200);
+		setSize(400, 100);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		JPanel panel1 = new JPanel();
-		JPanel panel2 = new JPanel();
-		JPanel panel3 = new JPanel();
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
-		panel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		getContentPane().add(panel1);
 
-		panel1.add(panel2);
-		panel1.add(panel3);
-		panel2.add(new JLabel("Product"));
+		// swing Panels
+		JPanel mainPanel = new JPanel();
+		JPanel row1Panel = new JPanel();
+		JPanel row2Panel = new JPanel();
+
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+		row1Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		row2Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		getContentPane().add(mainPanel);
+		mainPanel.add(row1Panel);
+		mainPanel.add(row2Panel);
+		
+		// Panel components
+		row1Panel.add(new JLabel("Product"));
 		JTextField productTextField = new JTextField();
-		productTextField.setColumns(12);
+		productTextField.setColumns(8);
+		row1Panel.add(productTextField);
 		
-		panel2.add(productTextField);
-		panel2.add(new JLabel("Qu"));
-		panel2.add(new JTextField("1"));
-		panel2.add(new JButton("4sdfdf"));
+		row1Panel.add(new JLabel("Quantity"));
+		JTextField quantityTextField = new JTextField("1");
+		quantityTextField.setColumns(1);
+		row1Panel.add(quantityTextField);
 		
-		panel3.add(new JLabel("To Pqy"));
-		panel3.add(new JTextField("0.00 "));
-		
-		
+		JButton addbutton = new JButton("Add");
+		addbutton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.addProduct(productTextField.getText(), quantityTextField.getText());
+				//System.out.println(String.format("you entered id:%s and quantity:%s", productTextField.getText(), quantityTextField.getText()));
+			}
+		});
+		row1Panel.add(addbutton);
+
+		row2Panel.add(new JLabel("To Pay"));
+		payField = new JTextField("0.00 ");
+		payField.setColumns(8);
+		payField.setEnabled(false);
+		row2Panel.add(payField);
 	}
 	public void showView(){
 		setVisible(true);
-		
 	}
-	
+	private UiController getController(){
+		return controller;
+	}
+	@Override
+	public void update(Subject subject) {
+		if (subject instanceof Verkoop) {
+			Verkoop verkoop = (Verkoop)subject;
+			payField.setText(String.format("%.2f EUR", verkoop.getTotalcost()));
+		}
+	}
 }
