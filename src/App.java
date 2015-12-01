@@ -5,4 +5,6 @@ public class App {
 		controller.showScanView();
 		
 	}
+	
+	// HET WERKT =D
 }
