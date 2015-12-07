@@ -29,6 +29,15 @@ public class UiController {
 			e.printStackTrace();
 		}
 	}
+	public void applyKorting(String code){
+		try {
+			shopFacade.applyKorting(code);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+			System.out.println("AddProduct error: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
 	// @TODO: dit is slecht, niet? Maar dan herhalen we praktisch hetzelfde vele maal
 	/*

@@ -15,6 +15,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode
     JTextField payField;
+    JTextField kortingField;
     JTable entriesTable;
 
     ArrayList<VerkoopEntry> entries;
@@ -28,8 +29,8 @@ public class ScanAdvancedView extends JFrame implements Observer {
 
         // Swing setup
         setTitle("Shop Manager beter");
-        setSize(600, 400);
-        setResizable(false);
+        setSize(500, 600);
+        setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -38,16 +39,19 @@ public class ScanAdvancedView extends JFrame implements Observer {
         JPanel row1Panel = new JPanel();
         JPanel row2Panel = new JPanel();
         JPanel row3Panel = new JPanel();
+        JPanel row4Panel = new JPanel();
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         row1Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row2Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row3Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        row4Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         getContentPane().add(mainPanel);
         mainPanel.add(row1Panel);
         mainPanel.add(row2Panel);
         mainPanel.add(row3Panel);
+        mainPanel.add(row4Panel);
 
         // Panel components
         row1Panel.add(new JLabel("Product"));
@@ -75,6 +79,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
         //entriesTable = new JTable(rows, columnNames);
         entriesModel = new EntriesTableModel();
         entriesTable = new JTable(entriesModel);
+        //entriesTable.setAutoResizeMode(JTable.);
 
         JScrollPane entriesTableScrollable = new JScrollPane(entriesTable);
         row2Panel.add(entriesTableScrollable);
@@ -84,6 +89,19 @@ public class ScanAdvancedView extends JFrame implements Observer {
         payField.setColumns(8);
         payField.setEnabled(false);
         row3Panel.add(payField);
+
+        row4Panel.add(new JLabel("Korting code:"));
+        kortingField = new JTextField();
+        kortingField.setColumns(8);
+        row4Panel.add(kortingField);
+        JButton applyKortingButton = new JButton("Apply");
+        applyKortingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getController().applyKorting(kortingField.getText());
+            }
+        });
+        row4Panel.add(applyKortingButton);
     }
 
    public class EntriesTableModel extends AbstractTableModel {
