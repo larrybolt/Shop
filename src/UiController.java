@@ -9,14 +9,12 @@ public class UiController {
 
 	public UiController(){
 		shopFacade = new ShopFacade();
-		// TODO: vragen of dit de beste methode is
 		scanView = new ScanAdvancedView(this);
 		customerView = new CustomerView(this);
 	}
 	public void showScanView(){
 		scanView.showView();
 		customerView.showView();
-		// TODO: vragen of dit zo moet
 		shopFacade.addObserver(scanView);
 		shopFacade.addObserver(customerView);
 	}
@@ -39,19 +37,6 @@ public class UiController {
 		}
 	}
 
-	// @TODO: dit is slecht, niet? Maar dan herhalen we praktisch hetzelfde vele maal
-	/*
-	bv om een lijst van producten op te halen uit domain:
-	view.displayProducts ->
-         controller.getProducts -> (deze stap lijkt overbodig)
-         shopFacade.getProducts ->
-	productsService.getProducts ->
-	<interface>productsRepository.getProducts -> (productsDBRepostiry|productsMapRepository).getProducts
-
-	nogmaals shopFacade.getProducts copieren naar controller lijkt overbodig, tenzij deze methode op vele plaatsen
-	opgeroepen wordt, maar als dezelfde dev beide de facade en controller maakt.. en de shopFacade is soort van een
-	contract om te verzekeren dat getProducts steeds hetzelfde zal teruggeven
-	 */
 	public ShopFacade getShopFacade(){
 		return shopFacade;
 	}

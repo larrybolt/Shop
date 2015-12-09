@@ -106,8 +106,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
         });
         row4Panel.add(applyKortingButton);
         
-        payField = new JTextField();
-        row5Panel.add(payField);
+        row4Panel.add(payField);
         JButton payButton = new JButton("pay");
         payButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
