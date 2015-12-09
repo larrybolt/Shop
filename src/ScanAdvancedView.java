@@ -40,18 +40,21 @@ public class ScanAdvancedView extends JFrame implements Observer {
         JPanel row2Panel = new JPanel();
         JPanel row3Panel = new JPanel();
         JPanel row4Panel = new JPanel();
+        JPanel row5Panel = new JPanel();
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         row1Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row2Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row3Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row4Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        row5Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         getContentPane().add(mainPanel);
         mainPanel.add(row1Panel);
         mainPanel.add(row2Panel);
         mainPanel.add(row3Panel);
         mainPanel.add(row4Panel);
+        mainPanel.add(row5Panel);
 
         // Panel components
         row1Panel.add(new JLabel("Product"));
@@ -102,6 +105,16 @@ public class ScanAdvancedView extends JFrame implements Observer {
             }
         });
         row4Panel.add(applyKortingButton);
+        
+        payField = new JTextField();
+        row5Panel.add(payField);
+        JButton payButton = new JButton("pay");
+        payButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		getController().pay(getController().getShopFacade().getTotalCost());
+        	}
+        });
+        row5Panel.add(payButton);
     }
 
    public class EntriesTableModel extends AbstractTableModel {
