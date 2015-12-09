@@ -51,6 +51,9 @@ public class UiController {
 		return formatPrice(totalCost);
 	}
 	public String formatPrice(double price){
-		return String.format("%.2f €", price);
+		return String.format("%.2f EUR", price);
+	}
+	public void pay(double amound){
+		shopFacade.pay(amound);
 	}
 }
