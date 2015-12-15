@@ -90,10 +90,19 @@ public class UiController {
 
     public void pay(double amount) {
         shopFacade.pay(amount);
-        scanView.close();
-
-        scanView = new ScanAdvancedView(this);
-        customerView = new CustomerView(this);
-        showScanView();
+        shopFacade.removeObserver(customerView);
+        shopFacade.removeObserver(scanView);
+        // TODO: perhaps Facade should be the subject/observable
+        shopFacade.startNewSale();
+        shopFacade.addObserver(scanView);
+        shopFacade.addObserver(customerView);
+        // TODO: as if there is a better way to do this
+        scanView.pullData();
+        customerView.pullData();
+        scanView.reset();
     }
+
+	public double getTotalCost() {
+		return shopFacade.getTotalCost();
+	}
 }

@@ -1,5 +1,5 @@
 import domain.product.Product;
-import domain.verkoop.Observer;
+import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
 import domain.verkoop.VerkoopEntry;
@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
-public class ScanAdvancedView extends JFrame implements Observer {
+public class ScanAdvancedView extends JFrame implements VerkoopObserver {
     private UiController controller;
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode
@@ -152,6 +152,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
     }
 
     private void refreshEntries() {
+        entries = getController().getShopFacade().getVerkoopProducts();
         rows = new String[entries.size()][columnNames.length];
         for (int i = 0; i < rows.length; i++) {
             int j = 0;
@@ -160,6 +161,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
             rows[i][j++] = controller.formatPrice(entries.get(i).getProduct().getPrice());
             rows[i][j++] = controller.formatPrice(entries.get(i).getEntryPrice());
         }
+        entriesModel.fireTableDataChanged();
     }
 
     public void showView() {
@@ -173,15 +175,21 @@ public class ScanAdvancedView extends JFrame implements Observer {
     private UiController getController() {
         return controller;
     }
+    
+    public void pullData() {
+    	refreshEntries();
+		payField.setText(getController().formatTotal(getController().getTotalCost()));
+    }
 
     @Override
     public void update(Subject subject) {
-        if (subject instanceof Verkoop) {
-            Verkoop verkoop = (Verkoop) subject;
-            payField.setText(getController().formatTotal(verkoop.getTotalcost()));
-            refreshEntries();
-            entriesModel.fireTableDataChanged();
-        }
+		Verkoop verkoop = (Verkoop) subject;
+		payField.setText(getController().formatTotal(verkoop.getTotalcost()));
+		refreshEntries();
+		entriesModel.fireTableDataChanged();
     }
-}
 
+	public void reset() {
+		this.kortingField.setText("");
+	}
+}
