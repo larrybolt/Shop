@@ -21,7 +21,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
     JTable entriesTable;
 
     ArrayList<VerkoopEntry> entries;
-    String columnNames[] = {"description", "quant", "unit", "total"};
+    String columnNames[] = {"Description", "Quantity", "Unit price", "Total Price"};
     String rows[][];
     EntriesTableModel entriesModel;
 
@@ -66,7 +66,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
 
         row1Panel.add(new JLabel("Quantity"));
         final JTextField quantityTextField = new JTextField("1");
-        quantityTextField.setColumns(1);
+        quantityTextField.setColumns(3);
         row1Panel.add(quantityTextField);
 
         JButton addbutton = new JButton("Add");
@@ -108,7 +108,6 @@ public class ScanAdvancedView extends JFrame implements Observer {
         });
         row4Panel.add(applyKortingButton);
 
-        row4Panel.add(payField);
         JButton payButton = new JButton("pay");
         payButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
