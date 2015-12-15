@@ -56,7 +56,7 @@ public class CustomerView extends JFrame implements VerkoopObserver {
         }
     }
     
-    public void pullData() {
+    public void reset() {
 		payField.setText(getController().formatTotal(controller.getTotalCost()));
     }
 }

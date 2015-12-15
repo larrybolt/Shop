@@ -1,15 +1,16 @@
 import domain.ShopFacade;
+import domain.verkoop.state.InsuffientPaymentException;
 
 import javax.swing.*;
 
 public class UiController {
     private ShopFacade shopFacade;
-    private ScanAdvancedView scanView;
+    private CashierView scanView;
     private CustomerView customerView;
 
     public UiController() {
         shopFacade = new ShopFacade();
-        scanView = new ScanAdvancedView(this);
+        scanView = new CashierView(this);
         customerView = new CustomerView(this);
     }
 
@@ -88,21 +89,35 @@ public class UiController {
         return String.format("%.2f EUR", price);
     }
 
-    public void pay(double amount) {
-        shopFacade.pay(amount);
-        shopFacade.removeObserver(customerView);
-        shopFacade.removeObserver(scanView);
-        // TODO: perhaps Facade should be the subject/observable
-        shopFacade.startNewSale();
-        shopFacade.addObserver(scanView);
-        shopFacade.addObserver(customerView);
-        // TODO: as if there is a better way to do this
-        scanView.pullData();
-        customerView.pullData();
-        scanView.reset();
+    public void pay() {
+    	try {
+            String enteredAmount = JOptionPane.showInputDialog("Amount paid by customer:");
+            if (enteredAmount == null) {
+            	return;
+            }
+            double amount = Double.parseDouble(enteredAmount);
+			shopFacade.pay(amount);
+			shopFacade.removeObserver(customerView);
+			shopFacade.removeObserver(scanView);
+			shopFacade.startNewSale();
+			shopFacade.addObserver(scanView);
+			shopFacade.addObserver(customerView);
+			customerView.reset();
+			scanView.reset();
+    	} catch (InsuffientPaymentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage() + ". Missing: " + e.getDifference());
+    	} catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Invalid amount");
+    	} catch (NullPointerException e) {
+    		
+    	}
     }
 
 	public double getTotalCost() {
 		return shopFacade.getTotalCost();
+	}
+
+	public void deleteProductEntry(int rowToDelete) {
+		shopFacade.deleteProductEntry(rowToDelete);
 	}
 }

@@ -13,20 +13,22 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
-public class ScanAdvancedView extends JFrame implements VerkoopObserver {
+public class CashierView extends JFrame implements VerkoopObserver {
     private UiController controller;
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode
     JTextField payField;
+    JTextField productTextField;
+    JTextField quantityTextField;
     JTextField kortingField;
     JTable entriesTable;
 
     ArrayList<VerkoopEntry> entries;
-    String columnNames[] = {"Description", "Quantity", "Unit price", "Total Price"};
+    String columnNames[] = {"Description", "Quantity", "Unit price", "Total Price", ""};
     String rows[][];
     EntriesTableModel entriesModel;
 
-    public ScanAdvancedView(UiController uiController) {
+    public CashierView(UiController uiController) {
         // OOO setup
         this.controller = uiController;
 
@@ -60,13 +62,13 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
         mainPanel.add(row5Panel);
 
         // Panel components
-        row1Panel.add(new JLabel("Product"));
-        final JTextField productTextField = new JTextField();
+        row1Panel.add(new JLabel("Product:"));
+        productTextField = new JTextField();
         productTextField.setColumns(8);
         row1Panel.add(productTextField);
 
-        row1Panel.add(new JLabel("Quantity"));
-        final JTextField quantityTextField = new JTextField("1");
+        row1Panel.add(new JLabel("Quantity:"));
+        quantityTextField = new JTextField("1");
         quantityTextField.setColumns(3);
         row1Panel.add(quantityTextField);
 
@@ -75,6 +77,7 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
             @Override
             public void actionPerformed(ActionEvent e) {
                 getController().addProduct(productTextField.getText(), quantityTextField.getText());
+                productTextField.setText("");
             }
         });
         row1Panel.add(addbutton);
@@ -85,6 +88,13 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
         //entriesTable = new JTable(rows, columnNames);
         entriesModel = new EntriesTableModel();
         entriesTable = new JTable(entriesModel);
+        ButtonColumn buttonColumn = new ButtonColumn(entriesTable, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int rowToDelete = Integer.valueOf(e.getActionCommand());
+				getController().deleteProductEntry(rowToDelete);
+			}
+		}, 4);
         //entriesTable.setAutoResizeMode(JTable.);
 
         JScrollPane entriesTableScrollable = new JScrollPane(entriesTable);
@@ -112,17 +122,19 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
         JButton payButton = new JButton("pay");
         payButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getController().pay(getController().getShopFacade().getTotalCost());
+                getController().pay();
             }
         });
         row5Panel.add(payButton);
     }
 
     public class EntriesTableModel extends AbstractTableModel implements TableModel {
+    	
+    	static final int AMOUNTCOLUMN = 1;
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 1;
+            return columnIndex == AMOUNTCOLUMN || columnIndex == getColumnCount()-1;
         }
 
         @Override
@@ -147,7 +159,9 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            getController().updateProductAmount(rowIndex, aValue + "");
+        	if (columnIndex == AMOUNTCOLUMN) {
+				getController().updateProductAmount(rowIndex, aValue + "");
+        	}
         }
     }
 
@@ -160,6 +174,7 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
             rows[i][j++] = "" + entries.get(i).getCount();
             rows[i][j++] = controller.formatPrice(entries.get(i).getProduct().getPrice());
             rows[i][j++] = controller.formatPrice(entries.get(i).getEntryPrice());
+            rows[i][j++] = "delete";
         }
         entriesModel.fireTableDataChanged();
     }
@@ -176,11 +191,6 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
         return controller;
     }
     
-    public void pullData() {
-    	refreshEntries();
-		payField.setText(getController().formatTotal(getController().getTotalCost()));
-    }
-
     @Override
     public void update(Subject subject) {
 		Verkoop verkoop = (Verkoop) subject;
@@ -191,5 +201,7 @@ public class ScanAdvancedView extends JFrame implements VerkoopObserver {
 
 	public void reset() {
 		this.kortingField.setText("");
+    	refreshEntries();
+		payField.setText(getController().formatTotal(getController().getTotalCost()));
 	}
 }
