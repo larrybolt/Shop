@@ -166,6 +166,10 @@ public class ScanAdvancedView extends JFrame implements Observer {
         setVisible(true);
     }
 
+    public void close() {
+        setVisible(false);
+    }
+
     private UiController getController() {
         return controller;
     }

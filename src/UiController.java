@@ -90,5 +90,10 @@ public class UiController {
 
     public void pay(double amount) {
         shopFacade.pay(amount);
+        scanView.close();
+
+        scanView = new ScanAdvancedView(this);
+        customerView = new CustomerView(this);
+        showScanView();
     }
 }
