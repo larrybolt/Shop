@@ -1,14 +1,16 @@
-import java.awt.FlowLayout;
+import domain.product.Product;
+import domain.verkoop.Observer;
+import domain.verkoop.Subject;
+import domain.verkoop.Verkoop;
+import domain.verkoop.VerkoopEntry;
+
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
-import domain.*;
 
 public class ScanAdvancedView extends JFrame implements Observer {
     private UiController controller;
@@ -19,11 +21,11 @@ public class ScanAdvancedView extends JFrame implements Observer {
     JTable entriesTable;
 
     ArrayList<VerkoopEntry> entries;
-    String columnNames[] = { "description", "quant", "unit", "total"};
+    String columnNames[] = {"description", "quant", "unit", "total"};
     String rows[][];
     EntriesTableModel entriesModel;
 
-    public ScanAdvancedView(UiController uiController){
+    public ScanAdvancedView(UiController uiController) {
         // OOO setup
         this.controller = uiController;
 
@@ -87,7 +89,7 @@ public class ScanAdvancedView extends JFrame implements Observer {
         JScrollPane entriesTableScrollable = new JScrollPane(entriesTable);
         row2Panel.add(entriesTableScrollable);
 
-        row3Panel.add(new JLabel("To Pay"));
+        row3Panel.add(new JLabel("To Pay:"));
         payField = new JTextField(getController().formatTotal(0));
         payField.setColumns(8);
         payField.setEnabled(false);
@@ -105,51 +107,62 @@ public class ScanAdvancedView extends JFrame implements Observer {
             }
         });
         row4Panel.add(applyKortingButton);
-        
+
         row4Panel.add(payField);
         JButton payButton = new JButton("pay");
-        payButton.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		getController().pay(getController().getShopFacade().getTotalCost());
-        	}
+        payButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getController().pay(getController().getShopFacade().getTotalCost());
+            }
         });
         row5Panel.add(payButton);
     }
 
-   public class EntriesTableModel extends AbstractTableModel {
-       @Override
-       public int getRowCount() { return entries.size(); }
-       @Override
-       public int getColumnCount() { return columnNames.length; }
-       @Override
-       public String getColumnName(int columnIndex){
-           return columnNames[columnIndex];
-       }
-       @Override
-       public Object getValueAt(int rowIndex, int columnIndex) { return rows[rowIndex][columnIndex]; }
-   }
+    public class EntriesTableModel extends AbstractTableModel {
+        @Override
+        public int getRowCount() {
+            return entries.size();
+        }
 
-    private void refreshEntries(){
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public String getColumnName(int columnIndex) {
+            return columnNames[columnIndex];
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            return rows[rowIndex][columnIndex];
+        }
+    }
+
+    private void refreshEntries() {
         rows = new String[entries.size()][columnNames.length];
-        for (int i = 0; i < rows.length; i++){
+        for (int i = 0; i < rows.length; i++) {
             int j = 0;
             rows[i][j++] = entries.get(i).getProduct().getName();
-            rows[i][j++] = ""+entries.get(i).getCount();
+            rows[i][j++] = "" + entries.get(i).getCount();
             rows[i][j++] = controller.formatPrice(entries.get(i).getProduct().getPrice());
             rows[i][j++] = controller.formatPrice(entries.get(i).getEntryPrice());
         }
     }
 
-    public void showView(){
+    public void showView() {
         setVisible(true);
     }
-    private UiController getController(){
+
+    private UiController getController() {
         return controller;
     }
+
     @Override
     public void update(Subject subject) {
         if (subject instanceof Verkoop) {
-            Verkoop verkoop = (Verkoop)subject;
+            Verkoop verkoop = (Verkoop) subject;
             payField.setText(getController().formatTotal(verkoop.getTotalcost()));
             refreshEntries();
             entriesModel.fireTableDataChanged();

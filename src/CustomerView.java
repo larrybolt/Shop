@@ -1,17 +1,17 @@
-import domain.Observer;
-import domain.Subject;
-import domain.Verkoop;
+import domain.verkoop.Observer;
+import domain.verkoop.Subject;
+import domain.verkoop.Verkoop;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomerView  extends JFrame implements Observer {
+public class CustomerView extends JFrame implements Observer {
     private UiController controller;
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode
     JTextField payField;
 
-    public CustomerView(UiController uiController){
+    public CustomerView(UiController uiController) {
         // OOO setup
         this.controller = uiController;
 
@@ -39,16 +39,19 @@ public class CustomerView  extends JFrame implements Observer {
         payField.setEnabled(false);
         row1Panel.add(payField);
     }
-    public void showView(){
+
+    public void showView() {
         setVisible(true);
     }
-    private UiController getController(){
+
+    private UiController getController() {
         return controller;
     }
+
     @Override
     public void update(Subject subject) {
         if (subject instanceof Verkoop) {
-            Verkoop verkoop = (Verkoop)subject;
+            Verkoop verkoop = (Verkoop) subject;
             payField.setText(getController().formatTotal(verkoop.getTotalcost()));
         }
     }
