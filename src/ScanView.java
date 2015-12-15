@@ -1,4 +1,4 @@
-import domain.verkoop.Observer;
+import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
 
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ScanView extends JFrame implements Observer {
+public class ScanView extends JFrame implements VerkoopObserver {
     private UiController controller;
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode

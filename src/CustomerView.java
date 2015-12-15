@@ -1,11 +1,11 @@
-import domain.verkoop.Observer;
+import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomerView extends JFrame implements Observer {
+public class CustomerView extends JFrame implements VerkoopObserver {
     private UiController controller;
 
     // we moeten dit bijhouden, want het wordt ge-update in de update() methode
@@ -54,5 +54,9 @@ public class CustomerView extends JFrame implements Observer {
             Verkoop verkoop = (Verkoop) subject;
             payField.setText(getController().formatTotal(verkoop.getTotalcost()));
         }
+    }
+    
+    public void pullData() {
+		payField.setText(getController().formatTotal(controller.getTotalCost()));
     }
 }
