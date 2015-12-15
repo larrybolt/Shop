@@ -1,6 +1,13 @@
 import domain.ShopFacade;
 import domain.verkoop.state.InsuffientPaymentException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import javax.swing.*;
 
 public class UiController {
@@ -9,7 +16,15 @@ public class UiController {
     private CustomerView customerView;
 
     public UiController() {
-        shopFacade = new ShopFacade();
+    	try {
+			URL location = UiController.class.getProtectionDomain().getCodeSource().getLocation();
+	        System.out.println(location.getFile());
+			InputStream configFile = new FileInputStream(location.getFile()+"../config.xml");
+			shopFacade = new ShopFacade(configFile);
+		} catch (FileNotFoundException e) {
+			shopFacade = new ShopFacade();
+			System.out.println("using maps :(");
+		}
         scanView = new CashierView(this);
         customerView = new CustomerView(this);
     }
