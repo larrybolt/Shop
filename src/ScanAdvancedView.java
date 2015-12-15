@@ -6,6 +6,7 @@ import domain.verkoop.VerkoopEntry;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,7 +118,13 @@ public class ScanAdvancedView extends JFrame implements Observer {
         row5Panel.add(payButton);
     }
 
-    public class EntriesTableModel extends AbstractTableModel {
+    public class EntriesTableModel extends AbstractTableModel implements TableModel {
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == 1;
+        }
+
         @Override
         public int getRowCount() {
             return entries.size();
@@ -136,6 +143,11 @@ public class ScanAdvancedView extends JFrame implements Observer {
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             return rows[rowIndex][columnIndex];
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            getController().updateProductAmount(rowIndex, aValue + "");
         }
     }
 

@@ -32,6 +32,23 @@ public class UiController {
         }
     }
 
+    public void updateProductAmount(int index, String newAmount) {
+        try {
+            int amount = parseAmount(newAmount);
+            if (amount == 0) {
+                shopFacade.removeEntry(index);
+            } else {
+                shopFacade.updateEntryAmount(index, amount);
+            }
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+            System.out.println("updateamount error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void applyKorting(String code) {
         try {
             shopFacade.applyKorting(code);
