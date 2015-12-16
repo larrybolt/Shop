@@ -4,7 +4,11 @@ import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * 
+ * @author Larry 
+ *
+ */
 public class CustomerView extends JFrame implements VerkoopObserver {
     private UiController controller;
 

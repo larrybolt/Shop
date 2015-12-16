@@ -24,6 +24,11 @@ import java.awt.event.MouseListener;
  * the model row number of the button that was clicked.
  * Source: http://www.camick.com/java/source/ButtonColumn.java
  */
+/**
+ * 
+ * @author Larry 
+ *
+ */
 public class ButtonColumn extends AbstractCellEditor
         implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
     private JTable table;
