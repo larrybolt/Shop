@@ -4,9 +4,10 @@ import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
- * 
- * @author Larry 
+ * Cashier View
+ * @author larrybolt & (Annelore)
  *
  */
 public class CustomerView extends JFrame implements VerkoopObserver {

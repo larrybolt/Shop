@@ -9,7 +9,7 @@ import java.net.URL;
 
 /**
  * 
- * @author larrybolt, Annelore
+ * @author larrybolt, annelore
  *
  */
 
