@@ -1,3 +1,4 @@
+import domain.korting.Korting;
 import domain.product.Product;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
@@ -6,17 +7,22 @@ import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * Cashier View
+ * @author larrybolt
+ *
+ */
 
 public class CashierView extends JFrame implements VerkoopObserver {
     private UiController controller;
 
-    // we moeten dit bijhouden, want het wordt ge-update in de update() methode
     JTextField payField;
     JTextField productTextField;
     JTextField quantityTextField;
@@ -33,13 +39,17 @@ public class CashierView extends JFrame implements VerkoopObserver {
         this.controller = uiController;
 
         // Swing setup
-        setTitle("Shop Manager beter");
-        setSize(500, 600);
-        setResizable(true);
+        setTitle("Cashier View");
+        setSize(500, 670);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // swing Panels
+        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel topPanel = new JPanel();
+
+        // Ordering tab
         JPanel mainPanel = new JPanel();
         JPanel row1Panel = new JPanel();
         JPanel row2Panel = new JPanel();
@@ -47,14 +57,29 @@ public class CashierView extends JFrame implements VerkoopObserver {
         JPanel row4Panel = new JPanel();
         JPanel row5Panel = new JPanel();
 
+        JPanel productsmainPanel = new JPanel();
+        JPanel kortingenmainPanel = new JPanel();
+        
+        topPanel.add(tabbedPane);
+        topPanel.add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.addTab("Order", mainPanel);
+        tabbedPane.addTab("Products", productsmainPanel);
+        tabbedPane.addTab("Kortingen", kortingenmainPanel);
+
+        // order
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         row1Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row2Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row3Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row4Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         row5Panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        
+        // products
+        productsmainPanel.setLayout(new BoxLayout(productsmainPanel, BoxLayout.PAGE_AXIS));
+        setupProductsTab(productsmainPanel);
+        setupKortingenTab(kortingenmainPanel);
 
-        getContentPane().add(mainPanel);
+        getContentPane().add(topPanel);
         mainPanel.add(row1Panel);
         mainPanel.add(row2Panel);
         mainPanel.add(row3Panel);
@@ -84,7 +109,7 @@ public class CashierView extends JFrame implements VerkoopObserver {
 
         // Set table column names and data manually
         entries = getController().getShopFacade().getVerkoopProducts();
-        ArrayList<Product> products = getController().getShopFacade().getProducts();
+        //ArrayList<Product> products = getController().getShopFacade().getProducts();
         //entriesTable = new JTable(rows, columnNames);
         entriesModel = new EntriesTableModel();
         entriesTable = new JTable(entriesModel);
@@ -165,6 +190,43 @@ public class CashierView extends JFrame implements VerkoopObserver {
         }
     }
 
+    private void setupProductsTab(JPanel panel) {
+    	panel.setLayout( new BorderLayout() );
+		String columnNames[] = { "id", "naam", "price" };
+
+        ArrayList<Product> products = getController().getShopFacade().getProducts();
+		String rows[][] = new String[products.size()][3];
+		for (int i = 0; i < rows.length; i++){
+			int j = 0;
+			rows[i][j++] = products.get(i).getId()+"";
+			rows[i][j++] = products.get(i).getName();
+			rows[i][j++] = getController().formatPrice(products.get(i).getPrice());
+		}
+		JTable table = new JTable(rows, columnNames);
+		
+		JScrollPane scrollPane = new JScrollPane( table );
+		panel.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void setupKortingenTab(JPanel panel) {
+    	panel.setLayout( new BorderLayout() );
+		String columnNames[] = { "code", "amount", "type" };
+
+        ArrayList<Korting> kortingen = getController().getShopFacade().getKortingen();
+		String rows[][] = new String[kortingen.size()][4];
+		for (int i = 0; i < rows.length; i++){
+			int j = 0;
+			rows[i][j++] = kortingen.get(i).getCode();
+			rows[i][j++] = kortingen.get(i).getAmount() > 1 ? 
+					getController().formatPrice(kortingen.get(i).getAmount()) : kortingen.get(i).getAmount() * 100 + "%";
+			rows[i][j++] = kortingen.get(i).getClass().getSimpleName();
+		}
+		JTable table = new JTable(rows, columnNames);
+		
+		JScrollPane scrollPane = new JScrollPane(table);
+		panel.add(scrollPane, BorderLayout.CENTER);
+    }
+
     private void refreshEntries() {
         entries = getController().getShopFacade().getVerkoopProducts();
         rows = new String[entries.size()][columnNames.length];
@@ -178,7 +240,7 @@ public class CashierView extends JFrame implements VerkoopObserver {
         }
         entriesModel.fireTableDataChanged();
     }
-
+    
     public void showView() {
         setVisible(true);
     }

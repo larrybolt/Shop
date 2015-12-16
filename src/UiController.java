@@ -7,6 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * 
+ * @author larrybolt, Annelore
+ *
+ */
+
 public class UiController {
     private ShopFacade shopFacade;
     private CashierView scanView;
@@ -20,7 +26,8 @@ public class UiController {
             shopFacade = new ShopFacade(configFile);
         } catch (FileNotFoundException e) {
             shopFacade = new ShopFacade();
-            System.out.println("using maps :(");
+        } catch (Exception e) {
+            shopFacade = new ShopFacade();
         }
         scanView = new CashierView(this);
         customerView = new CustomerView(this);
