@@ -22,7 +22,7 @@ public class UiController {
         try {
             URL location = UiController.class.getProtectionDomain().getCodeSource().getLocation();
             System.out.println(location.getFile());
-            InputStream configFile = new FileInputStream(location.getFile() + "../config.xml");
+            InputStream configFile = new FileInputStream("config.xml");
             shopFacade = new ShopFacade(configFile);
         } catch (FileNotFoundException e) {
             shopFacade = new ShopFacade();
