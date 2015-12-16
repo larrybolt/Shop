@@ -21,7 +21,6 @@ public class UiController {
     public UiController() {
         try {
             URL location = UiController.class.getProtectionDomain().getCodeSource().getLocation();
-            System.out.println(location.getFile());
             InputStream configFile = new FileInputStream("config.xml");
             shopFacade = new ShopFacade(configFile);
         } catch (FileNotFoundException e) {
