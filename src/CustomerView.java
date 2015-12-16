@@ -5,6 +5,11 @@ import domain.verkoop.VerkoopObserver;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Cashier View
+ * @author larrybolt & Annelore
+ *
+ */
 public class CustomerView extends JFrame implements VerkoopObserver {
     private UiController controller;
 

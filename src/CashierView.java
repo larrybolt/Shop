@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Cashier View
- * @author larrybolt
+ * @author larrybolt & Annelore
  *
  */
 
