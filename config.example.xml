@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<comment>WebShop configurations</comment>
-	<entry key="url">jdbc:postgresql://gegevensbanken.khleuven.be:51516/2TX32</entry>
-	<entry key="schema">r0296766_poney</entry>
-	<entry key="user">r0457024</entry>
-	<entry key="password"></entry>
-	<!-- nodig voor verbinding te maken met db van school --> 
-	<entry key="ssl">true</entry>
-	<entry key="sslfactory">org.postgresql.ssl.NonValidatingFactory</entry>
+    <comment>WebShop configurations</comment>
+    <entry key="url">jdbc:postgresql://gegevensbanken.khleuven.be:51516/2TX32</entry>
+    <entry key="schema">r0296766_poney</entry>
+    <entry key="user">r0457024</entry>
+    <entry key="password"></entry>
+    <!-- nodig voor verbinding te maken met db van school -->
+    <entry key="ssl">true</entry>
+    <entry key="sslfactory">org.postgresql.ssl.NonValidatingFactory</entry>
 </properties>

@@ -1,14 +1,11 @@
 import domain.ShopFacade;
 import domain.verkoop.state.InsuffientPaymentException;
 
-import java.io.File;
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import javax.swing.*;
 
 public class UiController {
     private ShopFacade shopFacade;
@@ -16,15 +13,15 @@ public class UiController {
     private CustomerView customerView;
 
     public UiController() {
-    	try {
-			URL location = UiController.class.getProtectionDomain().getCodeSource().getLocation();
-	        System.out.println(location.getFile());
-			InputStream configFile = new FileInputStream(location.getFile()+"../config.xml");
-			shopFacade = new ShopFacade(configFile);
-		} catch (FileNotFoundException e) {
-			shopFacade = new ShopFacade();
-			System.out.println("using maps :(");
-		}
+        try {
+            URL location = UiController.class.getProtectionDomain().getCodeSource().getLocation();
+            System.out.println(location.getFile());
+            InputStream configFile = new FileInputStream(location.getFile() + "../config.xml");
+            shopFacade = new ShopFacade(configFile);
+        } catch (FileNotFoundException e) {
+            shopFacade = new ShopFacade();
+            System.out.println("using maps :(");
+        }
         scanView = new CashierView(this);
         customerView = new CustomerView(this);
     }
@@ -105,34 +102,34 @@ public class UiController {
     }
 
     public void pay() {
-    	try {
+        try {
             String enteredAmount = JOptionPane.showInputDialog("Amount paid by customer:");
             if (enteredAmount == null) {
-            	return;
+                return;
             }
             double amount = Double.parseDouble(enteredAmount);
-			shopFacade.pay(amount);
-			shopFacade.removeObserver(customerView);
-			shopFacade.removeObserver(scanView);
-			shopFacade.startNewSale();
-			shopFacade.addObserver(scanView);
-			shopFacade.addObserver(customerView);
-			customerView.reset();
-			scanView.reset();
-    	} catch (InsuffientPaymentException e) {
+            shopFacade.pay(amount);
+            shopFacade.removeObserver(customerView);
+            shopFacade.removeObserver(scanView);
+            shopFacade.startNewSale();
+            shopFacade.addObserver(scanView);
+            shopFacade.addObserver(customerView);
+            customerView.reset();
+            scanView.reset();
+        } catch (InsuffientPaymentException e) {
             JOptionPane.showMessageDialog(null, e.getMessage() + ". Missing: " + e.getDifference());
-    	} catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid amount");
-    	} catch (NullPointerException e) {
-    		
-    	}
+        } catch (NullPointerException e) {
+
+        }
     }
 
-	public double getTotalCost() {
-		return shopFacade.getTotalCost();
-	}
+    public double getTotalCost() {
+        return shopFacade.getTotalCost();
+    }
 
-	public void deleteProductEntry(int rowToDelete) {
-		shopFacade.deleteProductEntry(rowToDelete);
-	}
+    public void deleteProductEntry(int rowToDelete) {
+        shopFacade.deleteProductEntry(rowToDelete);
+    }
 }

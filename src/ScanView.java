@@ -1,6 +1,6 @@
-import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
+import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import java.awt.*;

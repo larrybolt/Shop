@@ -1,8 +1,8 @@
 import domain.product.Product;
-import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
 import domain.verkoop.VerkoopEntry;
+import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -89,12 +89,12 @@ public class CashierView extends JFrame implements VerkoopObserver {
         entriesModel = new EntriesTableModel();
         entriesTable = new JTable(entriesModel);
         ButtonColumn buttonColumn = new ButtonColumn(entriesTable, new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int rowToDelete = Integer.valueOf(e.getActionCommand());
-				getController().deleteProductEntry(rowToDelete);
-			}
-		}, 4);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rowToDelete = Integer.valueOf(e.getActionCommand());
+                getController().deleteProductEntry(rowToDelete);
+            }
+        }, 4);
         //entriesTable.setAutoResizeMode(JTable.);
 
         JScrollPane entriesTableScrollable = new JScrollPane(entriesTable);
@@ -129,12 +129,12 @@ public class CashierView extends JFrame implements VerkoopObserver {
     }
 
     public class EntriesTableModel extends AbstractTableModel implements TableModel {
-    	
-    	static final int AMOUNTCOLUMN = 1;
+
+        static final int AMOUNTCOLUMN = 1;
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == AMOUNTCOLUMN || columnIndex == getColumnCount()-1;
+            return columnIndex == AMOUNTCOLUMN || columnIndex == getColumnCount() - 1;
         }
 
         @Override
@@ -159,9 +159,9 @@ public class CashierView extends JFrame implements VerkoopObserver {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        	if (columnIndex == AMOUNTCOLUMN) {
-				getController().updateProductAmount(rowIndex, aValue + "");
-        	}
+            if (columnIndex == AMOUNTCOLUMN) {
+                getController().updateProductAmount(rowIndex, aValue + "");
+            }
         }
     }
 
@@ -190,18 +190,18 @@ public class CashierView extends JFrame implements VerkoopObserver {
     private UiController getController() {
         return controller;
     }
-    
+
     @Override
     public void update(Subject subject) {
-		Verkoop verkoop = (Verkoop) subject;
-		payField.setText(getController().formatTotal(verkoop.getTotalcost()));
-		refreshEntries();
-		entriesModel.fireTableDataChanged();
+        Verkoop verkoop = (Verkoop) subject;
+        payField.setText(getController().formatTotal(verkoop.getTotalcost()));
+        refreshEntries();
+        entriesModel.fireTableDataChanged();
     }
 
-	public void reset() {
-		this.kortingField.setText("");
-    	refreshEntries();
-		payField.setText(getController().formatTotal(getController().getTotalCost()));
-	}
+    public void reset() {
+        this.kortingField.setText("");
+        refreshEntries();
+        payField.setText(getController().formatTotal(getController().getTotalCost()));
+    }
 }

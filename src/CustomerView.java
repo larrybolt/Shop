@@ -1,6 +1,6 @@
-import domain.verkoop.VerkoopObserver;
 import domain.verkoop.Subject;
 import domain.verkoop.Verkoop;
+import domain.verkoop.VerkoopObserver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,8 +55,8 @@ public class CustomerView extends JFrame implements VerkoopObserver {
             payField.setText(getController().formatTotal(verkoop.getTotalcost()));
         }
     }
-    
+
     public void reset() {
-		payField.setText(getController().formatTotal(controller.getTotalCost()));
+        payField.setText(getController().formatTotal(controller.getTotalCost()));
     }
 }
